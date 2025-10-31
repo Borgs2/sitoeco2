@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proiezioni PIL USA 2025 | Analisi Economica</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #2C3E50;
+            --secondary-color: #3498DB;
+            --accent-color: #2980B9;
+            --text-color: #34495E;
+            --background-color: #F8F9FA;
+            --success-color: #27AE60;
+            --warning-color: #F1C40F;
+            --danger-color: #E74C3C;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            padding: 4rem 2rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .metric-title {
+            color: var(--secondary-color);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .trend-indicator {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .trend-up {
+            background: rgba(39, 174, 96, 0.15);
+            color: var(--success-color);
+        }
+
+        .trend-neutral {
+            background: rgba(241, 196, 15, 0.15);
+            color: var(--warning-color);
+        }
+
+        .trend-danger {
+            background: rgba(231, 76, 60, 0.15);
+            color: var(--danger-color);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        .data-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 4rem;
+            color: #7F8C8D;
+            font-size: 0.9rem;
+        }
+
+        .chart-container {
+            height: 400px;
+            margin: 2rem 0;
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+        }
+
+        .risk-factor {
+            display: flex;
+            align-items: center;
+            margin: 1rem 0;
+            padding: 1rem;
+            background: #F8F9FA;
+            border-radius: 8px;
+        }
+
+        .risk-number {
+            width: 32px;
+            height: 32px;
+            background: var(--secondary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .header {
+                padding: 2rem 1rem;
+            }
+            
+            .metric-value {
+                font-size: 1.5rem;
+            }
+
+            .chart-container {
+                height: 300px;
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <div style="float: right; margin-top: -20px;">
+                <a href="IndexCina.html" style="color: white; text-decoration: none;">➔ Analisi Cina</a>
+		<a href="indexEU.html" style="color: white; text-decoration: none;">➔ Analisi EU</a>
+            </div>
+            <h1>Analisi Proiezioni PIL USA 2025</h1>
+            <p>Previsioni Economiche e di Mercato</p>
+            <div class="trend-indicator trend-up">Crescita Prevista: +1.5% su base annua</div>
+        </div>
+    </div>
+
+    <div class="container">
+<div class="grid">
+    <div class="card">
+        <div class="metric-title">PIL Reale</div>
+        <div class="metric-value">$29.32T</div>
+        <div class="trend-indicator trend-up">+1.5% vs 2024</div>
+    </div>
+
+    <div class="card">
+        <div class="metric-title">Crescita PIL Reale</div>
+        <div class="metric-value">1.5%</div>
+        <div class="trend-indicator trend-danger">Aggiustato per inflazione</div>
+    </div>
+
+    <div class="card">
+        <div class="metric-title">Tasso di Disoccupazione</div>
+        <div class="metric-value">4.2%</div>
+        <div class="trend-indicator trend-up">Full employment</div>
+    </div>
+</div>
+
+        <div class="card">
+            <h2>Indicatori Chiave</h2>
+            <table class="data-table">
+                <tr>
+                    <td>Fiducia dei Consumatori</td>
+                    <td>110.5 pts</td>
+                    <td><div class="trend-indicator trend-up">Massimo dal 2021</div></td>
+                </tr>
+                <tr>
+                    <td>Investimenti Privati</td>
+                    <td>18%</td>
+                    <td><div class="trend-indicator trend-neutral">Ripresa Prevista</div></td>
+                </tr>
+                <tr>
+                    <td>Spesa Pubblica</td>
+                    <td>6.3%</td>
+                    <td><div class="trend-indicator trend-danger">Critica</div></td>
+                </tr>
+                <tr>
+                    <td>Esportazioni Nette</td>
+                    <td>-3%</td>
+                    <td><div class="trend-indicator trend-up">Bilancio in Miglioramento</div></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="card">
+            <h2>Andamento Fiducia Consumatori</h2>
+            <div class="chart-container">
+                <canvas id="confidenceChart"></canvas>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Fattori di Rischio Principali</h2>
+            <div class="risk-factor">
+                <div class="risk-number">1</div>
+                <div>
+                    <h3>Politica Monetaria</h3>
+                    <p>Decisioni sui tassi d'interesse della Federal Reserve e misure di quantitative tightening. Alto deficit (1.300 miliardi)</p>
+                </div>
+            </div>
+            <div class="risk-factor">
+                <div class="risk-number">2</div>
+                <div>
+                    <h3>Dinamiche del Commercio Globale</h3>
+                    <p>Impatto degli accordi commerciali internazionali e relazioni geopolitiche</p>
+                </div>
+            </div>
+            <div class="risk-factor">
+                <div class="risk-number">3</div>
+                <div>
+                    <h3>Condizioni del Mercato del Lavoro</h3>
+                    <p>Tasso di partecipazione alla forza lavoro e crescita salariale</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Fonte: Ufficio Analisi Economiche degli Stati Uniti • FMI • Conference Board</p>
+            <p>Ultimo aggiornamento: Maggio 2025 • Proiezioni basate sugli indicatori economici attuali</p>
+        </div>
+    </div>
+
+    <script>
+        // Configurazione Grafico
+        const ctx = document.getElementById('confidenceChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['2021 Q1', '2021 Q3', '2022 Q1', '2022 Q3', '2023 Q1', '2023 Q3', '2024 Q1', '2024 Q3', '2025 Q1*'],
+                datasets: [{
+                    label: 'Indice Fiducia Consumatori',
+                    data: [85, 92, 98, 101, 105, 108, 109, 110, 110.5],
+                    borderColor: '#3498DB',
+                    backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#3498DB'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'top' },
+                    tooltip: { mode: 'index', intersect: false }
+                },
+                scales: {
+                    y: { 
+                        title: { display: true, text: 'Punti Indice' },
+                        suggestedMin: 80,
+                        suggestedMax: 120
+                    },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

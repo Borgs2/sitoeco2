@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <title>Configuratore - Versione</title>
+  <style>
+    /* (Same CSS as before — you can reuse it directly) */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+    }
+    header {
+      display: flex;
+      justify-content: space-around;
+      background-color: #333;
+      color: white;
+      padding: 15px 0;
+      font-size: 0.9rem;
+    }
+    header div {
+      padding: 5px 10px;
+    }
+    .active {
+      font-weight: bold;
+      text-decoration: underline;
+    }
+    a {
+      color: white;
+      text-decoration: none;
+    }
+    .versione-container {
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 20px;
+      background-color: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .versione-container h2 {
+      text-align: center;
+      font-size: 1.8rem;
+      margin-bottom: 30px;
+    }
+    .car-option {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid #ddd;
+      padding: 20px;
+      margin-bottom: 20px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .car-option:hover {
+      border-color: darkred;
+    }
+    .car-option.selected {
+      border: 2px solid darkred;
+      background-color: #fff9f9;
+    }
+    .car-info {
+      flex: 1;
+    }
+    .car-name {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .car-price {
+      display: flex;
+      gap: 15px;
+    }
+    .current-price {
+      font-weight: bold;
+      color: darkred;
+    }
+    .original-price {
+      text-decoration: line-through;
+      color: #777;
+    }
+    .car-availability {
+      color: #555;
+      font-size: 0.9rem;
+      margin-top: 5px;
+    }
+    .select-button {
+      background-color: darkred;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-weight: bold;
+      border-radius: 4px;
+    }
+    .select-button:hover {
+      background-color: #a00;
+    }
+    .proceed-button {
+      display: block;
+      width: 200px;
+      margin: 30px auto 0;
+      padding: 15px;
+      background-color: darkred;
+      color: white;
+      border: none;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .proceed-button:hover {
+      background-color: #a00;
+    }
+    .hidden {
+      display: none;
+    }
+.quantity-section {
+  margin: 25px 0;
+  text-align: center;
+}
+.quantity-label {
+  font-weight: bold;
+  margin-right: 15px;
+}
+.quantity-input {
+  width: 80px;
+  padding: 8px;
+  font-size: 1.1em;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+  </style>
+</head>
+<body>
+  <script>
+    // Get selected model from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const selectedModel = urlParams.get("modello") || "T-90";
+
+    const versioniPerModello = {
+      "T-55": [
+        { nome: "T-55 M", prezzo: "150.000 €", prezzoOriginale: "200.000 €", disponibilita: "Diesel", descrizione: "Equipaggiamento standard" },
+        { nome: "T-55 AM", prezzo: "180.000 €", prezzoOriginale: "230.000 €", disponibilita: "Diesel", descrizione: "Armatura migliorata + Sistema di controllo del tiro" },
+        { nome: "T-55 AM1", prezzo: "220.000 €", prezzoOriginale: "280.000 €", disponibilita: "Diesel", descrizione: "Armatura reattiva + ATGM" }
+      ],
+      "T-80": [
+        { nome: "T-80 Base", prezzo: "5.250.000 €", prezzoOriginale: "5.500.000 €", disponibilita: "Diesel, Turbina a Gas", descrizione: "Configurazione standard" },
+        { nome: "T-80BVM", prezzo: "5.750.000 €", prezzoOriginale: "6.000.000 €", disponibilita: "Turbina a Gas", descrizione: "Armatura reattiva + Sistema di difesa attiva" },
+        { nome: "T-80UK", prezzo: "6.250.000 €", prezzoOriginale: "6.500.000 €", disponibilita: "Turbina a Gas", descrizione: "Versione comando con equipaggiamento avanzato" }
+      ],
+      "T-90": [
+        //{ nome: "T-90", prezzo: "4.250.000 €", prezzoOriginale: "4.500.000 €", disponibilita: "Diesel", descrizione: "Equipaggiamento standard" },
+        { nome: "T-90M", prezzo: "4.750.000 €", prezzoOriginale: "5.000.000 €", disponibilita: "Diesel", descrizione: "Torretta migliorata + Sistema di osservazione termico" },
+        { nome: "T-90MS", prezzo: "5.250.000 €", prezzoOriginale: "5.500.000 €", disponibilita: "Diesel", descrizione: "Versione export con tutte le migliorie" }
+      ]
+    };
+
+    document.body.innerHTML = `
+      <header>
+        <div><a href="indexcarri.html">MODELLO</a></div>
+        <div class="active">VERSIONE</div>
+	<div>MUNIZIONI</div>
+        <div>RIEPILOGO</div>
+      </header>
+      <div class="versione-container">
+        <h2>SCEGLI LA VERSIONE</h2>
+        <div id="version-options"></div>
+	<form action="munizioni.html" method="get">
+ 	 <input type="hidden" name="modello" id="selected-model" value="${selectedModel}">
+	  <input type="hidden" name="versione" id="selected-version">
+  	<button type="submit" class="proceed-button">PROSEGUI</button>
+	</form>
+        </form>
+      </div>
+    `;
+
+    const container = document.getElementById("version-options");
+    const versioni = versioniPerModello[selectedModel];
+    const selectedVersionInput = document.getElementById("selected-version");
+
+    versioni.forEach((versione, i) => {
+      const div = document.createElement("div");
+      div.className = "car-option" + (i === 0 ? " selected" : "");
+      div.innerHTML = `
+        <div class="car-info">
+          <div class="car-name">${versione.nome}</div>
+          <div class="car-price">
+            <span class="current-price">${versione.prezzo}</span>
+            <span class="original-price">${versione.prezzoOriginale}</span>
+          </div>
+          <div class="car-availability">Disponibile in: ${versione.disponibilita}</div>
+          <div class="car-description" style="margin-top: 5px; font-size: 0.9rem; color: #666;">${versione.descrizione}</div>
+        </div>
+        <button type="button" class="select-button">${i === 0 ? "SELEZIONATO" : "SELEZIONA"}</button>
+        <input type="radio" name="versione" value="${versione.nome}" class="hidden" ${i === 0 ? "checked" : ""}>
+      `;
+      div.addEventListener("click", () => {
+        document.querySelectorAll(".car-option").forEach(opt => {
+          opt.classList.remove("selected");
+          opt.querySelector(".select-button").textContent = "SELEZIONA";
+        });
+        div.classList.add("selected");
+        div.querySelector(".select-button").textContent = "SELEZIONATO";
+        selectedVersionInput.value = versione.nome;
+      });
+      container.appendChild(div);
+    });
+
+    // Default selected version
+    selectedVersionInput.value = versioni[0].nome;
+  </script>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <title>Configuratore Carri Armati</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fff;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      display: flex;
+      justify-content: space-around;
+      padding: 20px 0;
+      border-bottom: 2px solid #000;
+      font-weight: bold;
+      position: relative;
+    }
+    header img {
+      height: 110px;
+      position: absolute;
+      top: 60px;
+      left: 20px;
+    }
+    .modello-container {
+      margin-top: 30px;
+    }
+    .tank-carousel {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 50px;
+    }
+    .tank {
+      opacity: 0.5;
+      transition: opacity 0.3s;
+      max-width: 250px;
+      cursor: pointer;
+    }
+    .tank.active {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+    .arrow {
+      font-size: 2rem;
+      cursor: pointer;
+      user-select: none;
+    }
+    .info {
+      margin-top: 20px;
+    }
+    .prezzo-originale {
+      text-decoration: line-through;
+      color: gray;
+    }
+    .prezzo-promo {
+      color: black;
+      font-weight: bold;
+      font-size: 1.5em;
+    }
+    button {
+      margin-top: 20px;
+      padding: 15px 30px;
+      font-size: 1rem;
+      background-color: darkred;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 6px;
+    }
+    .fuel-options {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>MODELLO</div>
+    <div>VERSIONE</div>
+    <div>MUNIZIONI</div>
+    <div>PERSONALIZZAZIONE</div>
+    <div>RIEPILOGO</div>
+    <img src="uralvagonzavod-logo-683289CDDA-seeklogo.com.png" alt="Logo UVZ" />
+  </header>
+
+  <div class="modello-container">
+    <h2>SCEGLI IL MODELLO</h2>
+    <div class="tank-carousel">
+      <div class="arrow" onclick="prevTank()">&#10094;</div>
+      <img id="tank-image" class="tank active" src="" alt="Tank Image" />
+      <div class="arrow" onclick="nextTank()">&#10095;</div>
+    </div>
+    <h3 id="tank-name"></h3>
+
+    <div class="info">
+      <span class="prezzo-originale" id="prezzo-originale"></span>
+      <span class="prezzo-promo" id="prezzo-promo"></span>
+      <div class="fuel-options"></div>
+    </div>
+
+    <button id="seleziona-button">SELEZIONA</button>
+  </div>
+
+  <script>
+    const tanks = [
+      {
+        nome: "T-55",
+        prezzo: "200.000 €",
+        promo: "150.000 €",
+        img: "Fiooif.png",
+        carburante: "Diesel"
+      },
+      {
+        nome: "T-80",
+        prezzo: "5.500.000 €",
+        promo: "5.250.000 €",
+        img: "Soggetto.png",
+        carburante: "Diesel, Turbina a Gas"
+      },
+      {
+        nome: "T-90",
+        prezzo: "5.000.000 €",
+        promo: "4.750.000 €",
+        img: "T-90M2.jpg",
+        carburante: "Diesel"
+      }
+    ];
+
+    let current = 2; // default tank index
+
+    function updateTank() {
+      const tank = tanks[current];
+      document.getElementById("tank-name").textContent = tank.nome;
+      document.getElementById("prezzo-originale").textContent = tank.prezzo;
+      document.getElementById("prezzo-promo").textContent = tank.promo;
+      document.getElementById("tank-image").src = tank.img;
+      document.querySelector(".fuel-options").textContent = "Disponibile in: " + tank.carburante;
+    }
+
+    function prevTank() {
+      current = (current - 1 + tanks.length) % tanks.length;
+      updateTank();
+    }
+
+    function nextTank() {
+      current = (current + 1) % tanks.length;
+      updateTank();
+    }
+
+    document.getElementById("seleziona-button").onclick = function() {
+      const modello = tanks[current].nome;
+      window.location.href = `versione.html?modello=${encodeURIComponent(modello)}`;
+    };
+
+    // Avvia la pagina mostrando il tank default
+    updateTank();
+  </script>
+</body>
+</html>

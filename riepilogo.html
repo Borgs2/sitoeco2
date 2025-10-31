@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Riepilogo Ordine</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f7f7f7;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 20px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+
+    .header-steps {
+      display: flex;
+      justify-content: space-around;
+      background: #333;
+      color: white;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+    }
+
+    .step {
+      padding: 8px 15px;
+      border-radius: 20px;
+    }
+
+    .active-step {
+      background: darkred;
+      font-weight: bold;
+    }
+
+    h1 {
+      color: darkred;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .summary-section {
+      margin-bottom: 30px;
+      padding: 20px;
+      border: 1px solid #eee;
+      border-radius: 8px;
+    }
+
+    .item-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .item-label {
+      color: #666;
+      width: 60%;
+    }
+
+    .item-value {
+      width: 35%;
+      text-align: right;
+      font-weight: bold;
+    }
+
+    .price-highlight {
+      color: darkred;
+      font-size: 1.1em;
+    }
+
+    .total-box {
+      background: #fff9f9;
+      padding: 25px;
+      border-radius: 8px;
+      margin-top: 30px;
+      text-align: right;
+    }
+
+    .grand-total {
+      font-size: 1.5em;
+      color: darkred;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+
+    // Dati base
+    const modello = urlParams.get('modello') || 'Non specificato';
+    const versione = urlParams.get('versione') || 'Non specificata';
+    const munizioniRaw = urlParams.get('munizioni') || "[]";
+    let munizioni = [];
+
+    try {
+      munizioni = JSON.parse(decodeURIComponent(munizioniRaw));
+    } catch (e) {
+      console.warn("Errore nel parsing delle munizioni:", e);
+    }
+
+    // Prezzi
+    const prezzi = {
+      versioni: {
+        "T-55 M": 150000,
+        "T-55 AM": 180000,
+        "T-55 Enigma": 220000,
+        "T-80 Base": 5250000,
+        "T-80BVM": 5750000,
+        "T-80UK": 6250000,
+        "T-90 Base": 4250000,
+        "T-90M": 4750000,
+        "T-90MS": 5250000
+      },
+      munizioni: {
+        "AP (Armor Piercing)": 1500,
+        "HEAT (High Explosive Anti-Tank)": 2500,
+        "HE (High Explosive)": 1800,
+        "APFSDS (Armor-Piercing Fin-Stabilized Discarding Sabot)": 4500,
+        "HEAT-MP (Multi-Purpose)": 3200,
+        "ATGM (Anti-Tank Guided Missile)": 8500,
+        "APFSDS-T (Tungsten)": 6800,
+        "HE-FRAG (High Explosive Fragmentation)": 2200,
+        "3UBK20 (Missile Guidato)": 9200
+      }
+    };
+
+    const prezzoVersione = prezzi.versioni[versione] || 0;
+    const totaleMunizioni = munizioni.reduce((acc, m) => acc + (prezzi.munizioni[m.nome] * m.quantità), 0);
+    const totaleComplessivo = prezzoVersione + totaleMunizioni;
+
+    document.body.innerHTML = `
+      <div class="container">
+        <div class="header-steps">
+          <div class="step">Modello</div>
+          <div class="step">Versione</div>
+          <div class="step">Munizioni</div>
+          <div class="step active-step">Riepilogo</div>
+        </div>
+
+        <h1>📝 Riepilogo Finale</h1>
+
+        <div class="summary-section">
+          <h2>🚜 Configurazione Carro Armato</h2>
+          <div class="item-row">
+            <div class="item-label">Modello selezionato:</div>
+            <div class="item-value price-highlight">${modello}</div>
+          </div>
+          <div class="item-row">
+            <div class="item-label">Versione:</div>
+            <div class="item-value price-highlight">${versione}</div>
+          </div>
+          <div class="item-row">
+            <div class="item-label">Prezzo versione:</div>
+            <div class="item-value">€ ${prezzoVersione.toLocaleString('it')}</div>
+          </div>
+        </div>
+
+        <div class="summary-section">
+          <h2>💥 Munizioni Selezionate</h2>
+          ${munizioni.map(m => `
+            <div class="item-row">
+              <div class="item-label">${m.nome} (${m.quantità}x)</div>
+              <div class="item-value">€ ${(prezzi.munizioni[m.nome] * m.quantità).toLocaleString('it')}</div>
+            </div>
+          `).join('')}
+          <div class="item-row" style="border-top: 2px solid #eee; padding-top: 15px;">
+            <div class="item-label">Totale munizioni:</div>
+            <div class="item-value price-highlight">€ ${totaleMunizioni.toLocaleString('it')}</div>
+          </div>
+        </div>
+
+        <div class="total-box">
+          <div style="margin-bottom: 15px;">Totale versione:</div>
+          <div style="font-size: 1.3em; margin-bottom: 20px;">€ ${prezzoVersione.toLocaleString('it')}</div>
+          <div style="margin-bottom: 15px;">+ Totale munizioni:</div>
+          <div style="font-size: 1.3em; margin-bottom: 25px;">€ ${totaleMunizioni.toLocaleString('it')}</div>
+          <div class="grand-total">TOTALE COMPLESSIVO: € ${totaleComplessivo.toLocaleString('it')}</div>
+        </div>
+      </div>
+    `;
+  </script>
+</body>
+</html>

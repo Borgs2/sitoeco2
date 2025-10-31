@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Configuratore - Munizioni</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-around;
+      background-color: #333;
+      color: white;
+      padding: 15px 0;
+      font-size: 0.9rem;
+    }
+
+    header div {
+      padding: 5px 10px;
+    }
+
+    .active {
+      font-weight: bold;
+      text-decoration: underline;
+    }
+
+    a {
+      color: white;
+      text-decoration: none;
+    }
+
+    .munizioni-container {
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 20px;
+      background-color: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .munizioni-container h2 {
+      text-align: center;
+      font-size: 1.8rem;
+      margin-bottom: 30px;
+    }
+
+    .ammo-option {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid #ddd;
+      padding: 15px 20px;
+      margin-bottom: 20px;
+      transition: all 0.3s;
+    }
+
+    .ammo-info {
+      flex: 1;
+    }
+
+    .ammo-name {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .ammo-details {
+      color: #555;
+      font-size: 0.9rem;
+    }
+
+    .ammo-quantity {
+      width: 60px;
+      margin-left: 15px;
+      padding: 5px;
+    }
+
+    .proceed-button {
+      display: block;
+      width: 200px;
+      margin: 30px auto 0;
+      padding: 15px;
+      background-color: darkred;
+      color: white;
+      border: none;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 8px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const modello = urlParams.get('modello');
+    const versione = urlParams.get('versione');
+
+    const munizioniPerModello = {
+      "T-55": ["AP (Armor Piercing)", "HEAT (High Explosive Anti-Tank)", "HE (High Explosive)"],
+      "T-80": ["APFSDS (Armor-Piercing Fin-Stabilized Discarding Sabot)", "HEAT-MP (Multi-Purpose)", "ATGM (Anti-Tank Guided Missile)"],
+      "T-90": ["APFSDS-T (Tungsten)", "HE-FRAG (High Explosive Fragmentation)", "3UBK20 (ATGM)"]
+    };
+
+    document.body.innerHTML = `
+      <header>
+        <div><a href="indexcarri.html">MODELLO</a></div>
+        <div><a href="versione.html?modello=${modello}">VERSIONE</a></div>
+        <div class="active">MUNIZIONI</div>
+        <div>RIEPILOGO</div>
+      </header>
+
+      <div class="munizioni-container">
+        <h2>SCEGLI LE MUNIZIONI</h2>
+        <div id="munizioni-options"></div>
+	<form action="riepilogo.html" method="get" onsubmit="return preparaMunizioni()">
+ 	 <input type="hidden" name="modello" value="${modello}">
+ 	 <input type="hidden" name="versione" value="${versione}">
+  	<input type="hidden" name="munizioni" id="selected-ammo">
+  	<button type="submit" class="proceed-button">CONFERMA E RIEPILOGO</button>
+	</form>
+        </form>
+      </div>
+    `;
+
+    const container = document.getElementById("munizioni-options");
+    const munizioni = munizioniPerModello[modello];
+
+    munizioni.forEach(munizione => {
+      const div = document.createElement("div");
+      div.className = "ammo-option";
+      div.innerHTML = `
+        <label style="display: flex; align-items: center; width: 100%;">
+          <input type="checkbox" style="margin-right: 10px;" class="ammo-checkbox" data-name="${munizione}">
+          <div class="ammo-info" style="flex: 1;">
+            <div class="ammo-name">${munizione}</div>
+            <div class="ammo-details">${getAmmoDetails(munizione)}</div>
+          </div>
+          <input type="number" class="ammo-quantity" min="0" value="0" disabled>
+        </label>
+      `;
+      container.appendChild(div);
+    });
+
+    document.querySelectorAll('.ammo-checkbox').forEach(cb => {
+      cb.addEventListener('change', function () {
+        const qty = this.closest('.ammo-option').querySelector('.ammo-quantity');
+        qty.disabled = !this.checked;
+        if (!this.checked) qty.value = 0;
+      });
+    });
+
+    function getAmmoDetails(munizione) {
+      const details = {
+        "AP (Armor Piercing)": "Penetrazione: 200mm | Danno: Medio",
+        "HEAT (High Explosive Anti-Tank)": "Penetrazione: 400mm | Danno: Alto",
+        "HE (High Explosive)": "Penetrazione: 50mm | Danno: Altissimo",
+        "APFSDS (Armor-Piercing Fin-Stabilized Discarding Sabot)": "Penetrazione: 600mm | Danno: Critico",
+        "HEAT-MP (Multi-Purpose)": "Penetrazione: 300mm | Danno: Medio (Anti-fanteria)",
+        "ATGM (Anti-Tank Guided Missile)": "Guida laser | Gittata: 5km",
+        "APFSDS-T (Tungsten)": "Penetrazione: 1150mm | Danno: Critico",
+        "HE-FRAG (High Explosive Fragmentation)": "Raggio esplosione: 10m | Danno: Area",
+        "3UBK20 (ATGM)": "Guida radar | Gittata: 7km"
+      };
+      return details[munizione] || "Specifiche tecniche non disponibili";
+    }
+
+    function preparaMunizioni() {
+      const selezioni = [];
+      document.querySelectorAll('.ammo-checkbox').forEach(cb => {
+        if (cb.checked) {
+          const nome = cb.dataset.name;
+          const qty = cb.closest('.ammo-option').querySelector('.ammo-quantity').value;
+          if (parseInt(qty) > 0) {
+            selezioni.push({ nome, quantità: parseInt(qty) });
+          }
+        }
+      });
+      document.getElementById("selected-ammo").value = JSON.stringify(selezioni);
+      return true;
+    }
+  </script>
+</body>
+</html>
